@@ -66,4 +66,5 @@ public class Carrinho {
 	public void alterar(CarrinhoProduto produto, int posicao) {
 		this.produtos.set(posicao, produto);
 	}
+	
 }
