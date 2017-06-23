@@ -39,6 +39,7 @@ public class JFrameLogin extends JFrame {
 	}
 
 	public JFrameLogin() {
+		setTitle("Login");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 333, 203);
 		contentPane = new JPanel();

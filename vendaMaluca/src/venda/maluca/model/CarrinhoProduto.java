@@ -15,6 +15,17 @@ public class CarrinhoProduto {
 	public CarrinhoProduto() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	
+
+	public CarrinhoProduto(Carrinho carrinho, Integer quantidade, Double valorTotal, Produto produto) {
+		super();
+		this.carrinho = carrinho;
+		this.quantidade = quantidade;
+		this.valorTotal = valorTotal;
+		this.produto = produto;
+	}
+
 
 	public Carrinho getCarrinho() {
 		return carrinho;

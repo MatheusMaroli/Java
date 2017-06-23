@@ -64,4 +64,13 @@ public class Produto {
 	public String toString(){
 		return this.getNome();
 	}
+	
+	public Boolean temEstoque(){
+		return this.getEstoque() > 0;
+	}
+	
+	public void baixarEstoque(Integer qtdade){
+		if ((this.estoque - qtdade) >= 0)
+			this.estoque = this.estoque - qtdade;
+	}
 }

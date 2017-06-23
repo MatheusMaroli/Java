@@ -14,15 +14,17 @@ import javax.swing.JOptionPane;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-
-
 public class JFramePrincipal extends JFrame {
 
 	private static final long serialVersionUID = 4740331679726391934L;
 	private JPanel contentPane;
-	private Usuario usuarioLogado;
+	private static Usuario usuarioLogado;
+	private final Action action = new SwingAction();
 
 	public JFramePrincipal(Usuario u) {
 		usuarioLogado = u;
@@ -77,8 +79,32 @@ public class JFramePrincipal extends JFrame {
 		});
 		mnNewMenu.add(mntmProdutos);
 		
-		JMenu mnVetrine = new JMenu("Vetrine");
-		menuBar.add(mnVetrine);
+		JMenu mnCompras = new JMenu("Compras");
+		mnCompras.setAction(action);
+		menuBar.add(mnCompras);
+		mnCompras.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				new JFrameCompra().setVisible(true);
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+		});
 		
 		JMenu mnAdmin = new JMenu("Admin");
 		menuBar.add(mnAdmin);
@@ -99,8 +125,16 @@ public class JFramePrincipal extends JFrame {
 		menuBar.add(mnAjuda);
 	}
 	
-	public Usuario getUsuarioLogado(){
-		return this.usuarioLogado;
+	public static Usuario getUsuarioLogado(){
+		return usuarioLogado;
 	}
-
+	private class SwingAction extends AbstractAction {
+		public SwingAction() {
+			putValue(NAME, "Compra");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog(null, "opa");
+		}
+	}
 }

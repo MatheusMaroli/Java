@@ -11,7 +11,7 @@ public class Venda {
 	private Date data;
 	private Double desconto;
 	private FormaPagamento formaPagamento;
-	private List<Parcela> parcelas = new ArrayList<>();		
+	private List<Parcela> parcelas = new ArrayList<Parcela>();		
 	
 	public Venda()
 	{

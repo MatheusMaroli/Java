@@ -1,8 +1,8 @@
 package venda.maluca.view;
 
-import java.awt.Desktop.Action;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,10 +11,8 @@ import javax.swing.table.DefaultTableModel;
 
 import venda.maluca.dao.ProdutoDAO;
 import venda.maluca.dao.TipoDAO;
-import venda.maluca.dao.UsuarioDAO;
 import venda.maluca.model.Produto;
 import venda.maluca.model.TipoProduto;
-import venda.maluca.model.Usuario;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -72,18 +70,23 @@ public class JFrameProduto extends JFrame {
 	}
 	
 
-	public void CarregarDadosGrid(){
-		ProdutoDAO produtos = new ProdutoDAO();
-		DefaultTableModel dados = new DefaultTableModel();
-		dados.setColumnIdentifiers(new Object[]{"Produto"});
-		for(Produto p : produtos.listar(0))
-			dados.addRow(new String[] {p.toString()});
-		table.setModel(dados);
+	public void CarregarDadosGrid(ArrayList<Produto> list){
+		Object[] colunas = new Object[] {"Produto", "Estoque", "Preço"};
+		Object[][] dados = new Object[list.size()][3];
 		
+		for(int i=0; i< list.size(); i++){
+			dados[i][0] = list.get(i).getNome();
+			dados[i][1] = list.get(i).getEstoque().toString();
+			dados[i][2] = list.get(i).getValor().toString();
+		}
+		
+		table.setModel(new DefaultTableModel(dados, colunas));
+
 		
 	}
 	
 	public JFrameProduto() {
+		
 		setTitle("Cadastro de Produtos");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 440, 390);
@@ -91,6 +94,8 @@ public class JFrameProduto extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+
 		
 		JLabel lblNome = new JLabel("Nome");
 		lblNome.setBounds(28, 11, 69, 14);
@@ -142,15 +147,16 @@ public class JFrameProduto extends JFrame {
 		contentPane.add(table);
 		
 		textFieldBuscar = new JTextField();
-		textFieldBuscar.setBounds(10, 159, 314, 20);
+		textFieldBuscar.setBounds(10, 159, 327, 20);
 		contentPane.add(textFieldBuscar);
 		textFieldBuscar.setColumns(10);
 		
 		JButton btnBuscar = new JButton("Buscar");
-		btnBuscar.setBounds(327, 158, 89, 23);
+		btnBuscar.setBounds(347, 158, 69, 23);
+		btnBuscar.addActionListener(new ActionBuscar());
 		contentPane.add(btnBuscar);
 		CarregarTipoProduto();
-		CarregarDadosGrid();
+		CarregarDadosGrid((ArrayList<Produto>) new ProdutoDAO().listar(0));
 	}
 	
 	private class ActionSalvar extends AbstractAction {
@@ -159,13 +165,17 @@ public class JFrameProduto extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-		   if (ValidarCampoVazio())
-			   new ProdutoDAO().adicionar(new Produto(textFieldNome.getText(), 
+		   if (ValidarCampoVazio()){
+			   
+		   
+			  ProdutoDAO produto = new ProdutoDAO();
+			  produto.adicionar(new Produto(textFieldNome.getText(), 
 					   								  Double.parseDouble(textFieldValor.getText()),
 					   								  Double.parseDouble(textFieldEstoque.getText()),
 					   								  (TipoProduto)comboBoxTipoProduto.getSelectedItem()
 					                      ));
-		   CarregarDadosGrid();
+			   CarregarDadosGrid((ArrayList<Produto>)produto.listar(0));
+		}
 			
 		}
 		
@@ -178,6 +188,17 @@ public class JFrameProduto extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			limparCampos();
+		}
+		
+	}
+	
+	private class ActionBuscar extends AbstractAction {
+		
+		private static final long serialVersionUID = -2318800225016632387L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			CarregarDadosGrid((ArrayList<Produto>)new ProdutoDAO().listar(textFieldBuscar.getText()));
 		}
 		
 	}

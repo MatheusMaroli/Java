@@ -42,6 +42,7 @@ public class ProdutoDAO extends Persistencia {
 				p.setEstoque(resultado.getDouble("estoque"));
 				TipoProduto tipo = new TipoProduto(resultado.getLong("idTipo"), resultado.getString("descricao"));
 				p.setTipo(tipo);	
+				listaTodos.add(p);
 			
 			}
 			return listaTodos;
@@ -53,6 +54,43 @@ public class ProdutoDAO extends Persistencia {
 			this.disconect();
 		}
 	}
+	
+	public List<Produto> listar (String filtro){
+		try
+		{
+			List<Produto> listaTodos = new ArrayList<Produto>();
+			this.conect();
+			ResultSet resultado = this.query(" select pr.idProduto, "
+					+ "pr.nome, "
+					+ "pr.valor, "
+					+ "pr.estoque, "
+					+ "pr.idTipo, "
+					+ "t.descricao "
+					+ " from produtos pr"
+					+ " join tipos t on pr.idTipo = t.idTipo"
+					+ " where pr.nome like '%" +  filtro.toString() + "%' " );
+			
+			while (resultado.next()){
+				Produto p = new Produto();
+				p.setCodigo(resultado.getLong("idProduto"));
+				p.setNome(resultado.getString("nome"));
+				p.setValor(resultado.getDouble("valor"));
+				p.setEstoque(resultado.getDouble("estoque"));
+				TipoProduto tipo = new TipoProduto(resultado.getLong("idTipo"), resultado.getString("descricao"));
+				p.setTipo(tipo);	
+				listaTodos.add(p);
+			
+			}
+			return listaTodos;
+		} catch (SQLException e){
+			JOptionPane.showMessageDialog(null, "Erro ao Carregar Produto " + e.toString());
+			return null;
+		}finally{
+
+			this.disconect();
+		}
+	}
+	
 	
 	public Produto buscar (Integer codigo) {
 		return listar(codigo).get(0);
