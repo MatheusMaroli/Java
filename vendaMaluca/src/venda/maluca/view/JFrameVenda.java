@@ -154,10 +154,7 @@ public class JFrameVenda extends JFrame {
 		dados.setColumnIdentifiers(new Object[]{"Itens"});
 		for(CarrinhoProduto p : venda.getCarrinho().getProdutos() )
 			dados.addRow(new String[] {p.getProduto().getNome()});
-		
-		tableItens.setModel(dados);
-		
-		
+		tableItens.setModel(dados);		
 	}
 	
 	private class ActionComprar extends AbstractAction{
