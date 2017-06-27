@@ -3,11 +3,12 @@ package venda.maluca.view;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
 import venda.maluca.dao.ProdutoDAO;
 import venda.maluca.model.Carrinho;
 import venda.maluca.model.CarrinhoProduto;
 import venda.maluca.model.Produto;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -40,7 +41,7 @@ public class JFrameCompra extends JFrame {
 	public JFrameCompra() {
 		setTitle("Compra");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 545, 338);
+		setBounds(100, 100, 535, 376);
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -58,7 +59,7 @@ public class JFrameCompra extends JFrame {
 		getContentPane().add(btnIniciarCompra);
 		
 		table = new JTable();
-		table.setBounds(331, 58, 188, 230);
+		table.setBounds(331, 96, 188, 230);
 		getContentPane().add(table);
 		
 		comboBoxProduto = new JComboBox<Produto>();
@@ -105,6 +106,7 @@ public class JFrameCompra extends JFrame {
 		
 		JButton btnFinalizarCompra = new JButton("Finalizar Compra");
 		btnFinalizarCompra.setBounds(180, 11, 142, 23);
+		btnFinalizarCompra.addActionListener(new ActionFinalizarCompra());
 		getContentPane().add(btnFinalizarCompra);
 		
 		JLabel lblValorTotalCampra = new JLabel("Valor Total Campra");
@@ -121,8 +123,23 @@ public class JFrameCompra extends JFrame {
 		getContentPane().add(lblEstoque);
 		
 		contentPane.setLayout(null);
+		
+		JButton btnRemover = new JButton("Remover");
+		btnRemover.setBounds(430, 69, 89, 23);
+		btnRemover.addActionListener(new ActionRemoverProduto());
+		contentPane.add(btnRemover);
 		this.carregarProdutoaComboBox();
 	}
+	
+	public void carregarDadosGrid(){		
+		DefaultTableModel dados = new DefaultTableModel();
+		dados.setColumnIdentifiers(new Object[]{"Produto"});
+		
+		for(CarrinhoProduto p : carrinho.getProdutos() )
+			dados.addRow(new String[] {p.getProduto().toString()});
+		table.setModel(dados);
+	}
+	
 	
 	private void AtualizarTela(){
 		Produto p = (Produto)comboBoxProduto.getSelectedItem();
@@ -195,15 +212,16 @@ public class JFrameCompra extends JFrame {
 									(Integer.parseInt(textFieldQtdade.getText()) * produto.getValor()),
 									produto
 						));
-				atualizarValorTotalCompra(Integer.parseInt(textFieldQtdade.getText()) * produto.getValor());
+				produto.baixarEstoque(Integer.parseInt(textFieldQtdade.getText()));
+				atualizarValorTotalCompra();
+				carregarDadosGrid();
 			}
 
 		}
 	}
 	
-	private void atualizarValorTotalCompra(Double valor){
-		Double total = Double.parseDouble(lblLabelTotal.getText()) + valor;
-		lblLabelTotal.setText(total.toString() );
+	private void atualizarValorTotalCompra(){
+		lblLabelTotal.setText(carrinho.getTotal().toString());
 	}
 	
 	private class ActionFinalizarCompra extends AbstractAction {
@@ -211,7 +229,8 @@ public class JFrameCompra extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
+			carrinho.salvar(carrinho);
+			new JFrameVenda(carrinho).setVisible(true);
 
 		}
 	}
@@ -231,4 +250,19 @@ public class JFrameCompra extends JFrame {
 
 		}
 	}
+	
+	private class ActionRemoverProduto extends AbstractAction{
+
+		private static final long serialVersionUID = 8517006705499310372L;
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			carrinho.getProdutos().remove(comboBoxProduto.getSelectedIndex());
+			comboBoxProduto.remove(comboBoxProduto.getSelectedIndex());
+			atualizarValorTotalCompra();
+
+
+		}
+	}
+	
+	
 }

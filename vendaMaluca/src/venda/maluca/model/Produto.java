@@ -73,4 +73,8 @@ public class Produto {
 		if ((this.estoque - qtdade) >= 0)
 			this.estoque = this.estoque - qtdade;
 	}
+	
+	public void adicionarEstoque(Integer qtdade){
+		this.estoque = this.estoque + qtdade;
+	}
 }

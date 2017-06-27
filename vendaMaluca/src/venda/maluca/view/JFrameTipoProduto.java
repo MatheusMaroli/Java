@@ -31,8 +31,6 @@ public class JFrameTipoProduto extends JFrame {
 		for(TipoProduto tp : tipoProduto.listar(tipo))
 			dados.addRow(new String[] {tp.toString()});
 		table.setModel(dados);
-		
-		
 	}
 	
 	public JFrameTipoProduto() {

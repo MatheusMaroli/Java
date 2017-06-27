@@ -6,13 +6,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.swing.JOptionPane;
+
 public class Persistencia {
 
 	private String host;
 	private String user;
 	private String password;
 	private Connection connection;
-	private Statement statment;
+	private Statement statment; 
 	private String strConnection;
 	private String driverjdbc;
 
@@ -67,6 +69,7 @@ public class Persistencia {
 
 		try {
 			return getStatment().execute(sql);
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
@@ -138,4 +141,23 @@ public class Persistencia {
 	public void setDriverjdbc(String driverjdbc) {
 		this.driverjdbc = driverjdbc;
 	}
+	
+	public Long getUltimoCodigo(String fieldName, String tableName){
+		try {
+			this.conect();
+			ResultSet r = (ResultSet) this.query("SELECT MAX(" +fieldName.toString() +") as " + fieldName.toString() + " "
+												+ " FROM  " +tableName.toString() +" ");
+		
+			while(r.next()){
+				return ((Long)r.getLong(fieldName.toString()));
+			}
+		} catch (SQLException e) {
+			return null;
+		}finally{
+			this.disconect();
+		};
+		return null;
+	}
+	
+
 }

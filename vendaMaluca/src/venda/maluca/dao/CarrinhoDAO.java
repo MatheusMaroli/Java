@@ -16,11 +16,27 @@ public class CarrinhoDAO extends Persistencia {
 	public void adicionar(Carrinho c){
 		
 		this.conect();
-		this.execSql(" insert into carrinhos (idUsuario, total) values (" +c.getUsuario().getCodigo().toString() +
-																	       c.getTotal() +		") ");
+		this.execSql(" insert into carrinhos (idUsuario, total) values (" +c.getUsuario().getCodigo().toString() + ", "
+																	      + c.getTotal() + ") ");
 		this.disconect();
 	}
 	
+	
+	/*public Long getUltimoCarrinho(){
+		try {
+			this.conect();
+			ResultSet r = (ResultSet) this.query("SELECT MAX(idCarrinho) as idCarrinho FROM carrinhos");
+		
+			while(r.next()){
+				return ((Long)r.getLong("idCarrinho")  );
+			}
+		} catch (SQLException e) {
+			return null;
+		}finally{
+			this.disconect();
+		};
+		return null;
+	}*/
 
 	public List<Carrinho> listar(Integer id){
 		try

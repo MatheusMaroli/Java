@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import venda.maluca.dao.CarrinhoDAO;
+
 public class Carrinho {
 	
 	private Long codigo;
@@ -32,9 +34,6 @@ public class Carrinho {
 		this.produtos = c;
 	}
 	
-	public void setCodigo(Long codigo) {
-		this.codigo = codigo;
-	}
 
 	public Date getData() {
 		return data;
@@ -67,4 +66,18 @@ public class Carrinho {
 		this.produtos.set(posicao, produto);
 	}
 	
+	
+	public void salvar(Carrinho c){
+		CarrinhoDAO carrinhoDao = new CarrinhoDAO();
+		carrinhoDao.adicionar(c);
+		this.setCodigo(carrinhoDao.getUltimoCodigo("idCarrinho", "carrinhos"));		
+		
+		
+		new CarrinhoProduto().salvar(c.produtos);
+	}
+
+	public void setCodigo(Long codigo) {
+		this.codigo = codigo;
+	}
+
 }

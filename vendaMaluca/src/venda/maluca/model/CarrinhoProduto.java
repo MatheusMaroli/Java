@@ -1,5 +1,12 @@
 package venda.maluca.model;
 
+import java.util.List;
+
+import javax.swing.JOptionPane;
+
+import venda.maluca.dao.CarrinhoProdutoDAO;
+import venda.maluca.dao.ProdutoDAO;
+
 public class CarrinhoProduto {
 	private Long codigo;
 	private Carrinho carrinho;
@@ -61,5 +68,16 @@ public class CarrinhoProduto {
 	
 	public void setProduto(Produto produto) {
 		this.produto = produto;
+	}
+	
+	public void salvar(List<CarrinhoProduto> produtos){
+		CarrinhoProdutoDAO persistencia = new CarrinhoProdutoDAO();
+		ProdutoDAO produtoPercistencia = new ProdutoDAO();
+		for(CarrinhoProduto p : produtos)
+		{
+			persistencia.adicionar(p);
+			produtoPercistencia.atualizar(p.getProduto());
+		}
+			
 	}
 }

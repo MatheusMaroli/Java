@@ -7,7 +7,6 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import venda.maluca.model.CarrinhoProduto;
-import venda.maluca.model.Produto;
 
 public class CarrinhoProdutoDAO extends Persistencia {
 	
@@ -15,7 +14,7 @@ public class CarrinhoProdutoDAO extends Persistencia {
 		this.conect();
 		this.execSql(" insert into carrinho_produtos (idProduto, quantidade, valorTotal, idCarrinho) " +
 					 "  values ("+ cp.getProduto().getCodigo() + ", " + cp.getQuantidade() + ", " + cp.getValorTotal()+
-					            ", " + cp.getCarrinho().getCodigo() + " )"
+					            ", "+ cp.getCarrinho().getCodigo() +"  )"
 					 );
 		this.disconect();
 	}

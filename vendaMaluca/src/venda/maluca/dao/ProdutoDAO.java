@@ -19,6 +19,12 @@ public class ProdutoDAO extends Persistencia {
 		this.disconect();
 	}
 	
+	public void atualizar(Produto p){
+		this.conect();
+		this.execSql(" update produtos set valor = " + p.getValor() + ", estoque = " + p.getEstoque() +
+					 " where idproduto = " + p.getCodigo() );
+	}
+	
 	public List<Produto> listar (Integer Codigo){
 		try
 		{
